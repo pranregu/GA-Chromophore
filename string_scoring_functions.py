@@ -10,7 +10,6 @@ from rdkit import Chem
 from ase.calculators.emt import EMT
 
 import Multipoint as co
-import scoring_functions as sc
 
 def energymin(mol, args):
     m = Chem.MolFromSmiles(mol)
