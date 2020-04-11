@@ -6,17 +6,12 @@ Created on Mon Nov 18 13:11:57 2019
 """
 
 from rdkit import Chem
-from rdkit.Chem import AllChem
-from rdkit.Chem import Descriptors
-from rdkit.Chem import rdmolops
 
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
 import numpy as np
 import random
-import time
-import sys
 
 import Multipoint as co
 import string_mutate as mu
@@ -93,17 +88,17 @@ def sanitize(population,scores,population_size,prune_population):
 
 def GA(args):
   population_size, file_name, generations, mating_pool_size, mutation_rate, \
-  scoring_args, max_score, prune_population = args
+  max_score, prune_population = args
  
   maxscore = []  
   population = make_initial_population(population_size,file_name)
-  scores = sc.calculate_scores(population,scoring_args)
+  scores = sc.calculate_scores(population)
   fitness = calculate_normalized_fitness(scores)
 
   for generation in range(generations):
     mating_pool = make_mating_pool(population,fitness,mating_pool_size)
     new_population = reproduce(mating_pool,population_size,mutation_rate)
-    new_scores = sc.calculate_scores(new_population,scoring_args)
+    new_scores = sc.calculate_scores(new_population)
     population, scores = sanitize(population+new_population, scores+new_scores, population_size,prune_population)  
     fitness = calculate_normalized_fitness(scores)
     
@@ -115,8 +110,6 @@ def GA(args):
 
 
 if __name__ == "__main__":
-    Compound = 'C1=CC=CC=C1C2=CC=C(C3=CC=CC=C3)C=C2'
-    target = Chem.MolFromSmiles(Compound)
     population_size = 5 
     mating_pool_size = 20
     generations = 1
@@ -126,12 +119,12 @@ if __name__ == "__main__":
     #scoring_function = sc.energymin
     max_score = 1 
     prune_population = True
-    scoring_args = [target]
+    
  
     file_name = 'terphenyl.smi'
 
     (scores, population, generation,fitness, maxscore) = GA([population_size, file_name, generations,
-                                           mating_pool_size, mutation_rate, scoring_args, max_score,
+                                           mating_pool_size, mutation_rate, max_score,
                                            prune_population])
     print('done')
 
