@@ -5,9 +5,6 @@ Created on Sat Nov  2 18:42:06 2019
 @author: Pran Regu
 """
 
-from rdkit import Chem
-from rdkit.Chem import AllChem
-
 import random
 import numpy as np
 
@@ -33,8 +30,7 @@ def mutate(child,mutation_rate):
         mutated_gene = random.randint(0, len(child) - 1)
         random_symbol_number = random.randint(0, len(symbols)-1)
         new_child = list(child)
-        random_number = random.random()
-        
+                
         if (new_child[mutated_gene] == '='):
             m=1 #nothing
         
