@@ -5,7 +5,8 @@ Prerequisites:
 
 QChem
 Python packages: a. ase b. rdkit c. pymatgen
-Installing: Qchem can be downloaded from http://www.q-chem.com/. IMPORTANT: Qchem requires a license. All of the above mentioned packages have conda installtions.
+Installing: Qchem can be downloaded from http://www.q-chem.com/. IMPORTANT: Qchem requires a license. 
+All of the above mentioned packages have conda installtions.
 
 Modules:
 
