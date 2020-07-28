@@ -16,11 +16,8 @@ Modules:
 Multipoint: Crossover operator Takes 2 molecules as SMILES and produces a new molecule with features of both the parent molecules. 
 string_mutate: Mutation operator Takes 1 molecule as SMILES and replaces one atom/functional group with another. 
 xyz_gen: Takes a SMILES representation and creates a xyz file 
-gen: Creates a Qchem input file 
-qchem_run: Makes slurm files. (file.run) 
-submit_runs: Submits slurm files. 
-New_scoring_fn: Assigns scores to molecules based on their LUMO energies.
+Sc_fn2: Assigns scores to molecules based on their LUMO energies.
 string_GA: Generates a population of molecules that evolve in each generation(iteration) with increasing values of LUMO energies.
-terphenyl.smi: File containing terphenyl SMILES, which are used to make the initial population in string_GA. 
+terphenyl2.smi: File containing terphenyl SMILES, which are used to make the initial population in string_GA. 
 
 Running: Run the file string_GA.
