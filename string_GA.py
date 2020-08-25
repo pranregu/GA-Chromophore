@@ -22,6 +22,7 @@ import Multipoint as co
 import string_mutate as mu
 import Sc_fn2 as sc
 
+# Read input file for intial population
 def read_file(file_name):
   smiles_list = []
   with open(file_name,'r') as file:
@@ -45,6 +46,7 @@ def make_initial_population(population_size,file_name):
     
   return population
 
+# Scales down scores to a range of 0-1, where a higher number corresponds to a better probability of reproduction
 def calculate_normalized_fitness(scores):
   sum_scores = len(scores)-sum(np.absolute(scores))
   sum_scores = sum_scores[0]
@@ -52,6 +54,7 @@ def calculate_normalized_fitness(scores):
    
   return normalized_fitness
 
+# Creates a mating pool of the specified population size
 def make_mating_pool(population,fitness,mating_pool_size):
   mating_pool = []
   for i in range(mating_pool_size):
@@ -59,7 +62,7 @@ def make_mating_pool(population,fitness,mating_pool_size):
 
   return mating_pool
  
-
+# Performs crossover and mutation to produce a new molecule
 def reproduce(mating_pool,population_size,mutation_rate):
   new_population = []
   while len(new_population) < population_size:
@@ -73,6 +76,7 @@ def reproduce(mating_pool,population_size,mutation_rate):
 
   return new_population
 
+# Compares the list of parents and new molecules and chooses the best from both put together
 def sanitize(population,scores,population_size):
     prune_population = True 
     if prune_population:
@@ -127,6 +131,7 @@ def GA(args):
   return (scores, population, generation+1, fitness, maxscore)
 
 
+# Test case
 if __name__ == "__main__":
     Compound = 'C1=CC=CC=C1C2=CC=C(C3=CC=CC=C3)C=C2'
     target = Chem.MolFromSmiles(Compound)
