@@ -3,14 +3,10 @@
 Created on Tue May 19 09:14:16 2020
 
 @author: Pran Regu
+
+SCORING FUNCTION
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 24 17:30:50 2020
-
-@author: Pran Regu
-"""
 
 from rdkit import Chem
 
@@ -24,7 +20,7 @@ import xyz_gen as xg
 import os
 import time
 
-
+# Function to find and extract LUMO value from QChem.out file
 def extract_LUMO(file):#change filename here
         number = 0   
         with open(file,"r") as output_file:
@@ -46,6 +42,7 @@ def extract_LUMO(file):#change filename here
                 LUMO[i] = float(LUMO[i])
         return(LUMO)
 
+# Function to calculate score (LUMO value); Called while running string_GA.py 
 def calculate_scores(population, args, generation):
   scores = []
   #smiles to xyz
@@ -70,7 +67,7 @@ def calculate_scores(population, args, generation):
       score = extract_LUMO(file)
       scores.append(score)
 
-  #Printing scores:
+  #Printing scores in a separate file called Result.out:
   f = open("Result.out", "a")
   print(generation, file=f)
   print(scores, file=f)   
