@@ -13,6 +13,7 @@ import numpy as np
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
+#Check if the generated molecule is legetimate
 def string_OK(string):
   mol = string2mol(string)
   if not mol:
@@ -64,7 +65,7 @@ def string2mol(string):
     except:
         return None
 
-# multipoint crossover
+# Multipoint Crossover: Randomly chooses 2 molecules and performs crossover operation to generate a new molecule
 def crossover(parent_a,parent_b):
     
     for _ in range(50):
