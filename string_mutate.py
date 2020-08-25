@@ -3,6 +3,8 @@
 Created on Sat Nov  2 18:42:06 2019
 
 @author: Pran Regu
+
+MUTATION OPERATOR
 """
 
 from rdkit import Chem
@@ -16,12 +18,13 @@ import Multipoint as co
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
+# List of possible mutations
 def get_symbols():
     symbols = ['C(C#N)', 'C(C=O)', 'C(C(=O)C)', 'C(O)', 'C(C4=CC=CC=C4)', 'C(C(=O)O)'] 
-               #'C(C4=CC=C(C5=CC=CC=C5)C=C4)', 'C(C4=C(C5=CC=CC=C5)C=CC=C4)', 
-               #'C(C4=CC(C5=CC=CC=C5)=CC=C4)']
+               
     return symbols
 
+# Mutation operator; Causes a mutation if random number less than specified mutation rate in string_GA.oy
 def mutate(child,mutation_rate):
     if random.random() > mutation_rate:
         return child
@@ -35,6 +38,7 @@ def mutate(child,mutation_rate):
         new_child = list(child)
         random_number = random.random()
         
+        # Finds a new position for mutation if the chosen position is a bond
         if (new_child[mutated_gene] == '='):
             m=1 #nothing
         
@@ -45,7 +49,8 @@ def mutate(child,mutation_rate):
                  return new_child
 
     return co.list2string(child)
-                    
+           
+# Test case    
 if __name__ == "__main__":
     co.average_size = 39.15
     co.size_stdev = 3.50
