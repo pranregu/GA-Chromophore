@@ -15,7 +15,6 @@ import numpy as np
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
-#Check if the generated molecule is legetimate
 def string_OK(string):
   mol = string2mol(string)
   if not mol:
@@ -67,65 +66,70 @@ def string2mol(string):
     except:
         return None
 
-# Multipoint Crossover: Randomly chooses 2 molecules and performs crossover operation to generate a new molecule
+# multipoint crossover
 def crossover(parent_a,parent_b):
     
     for _ in range(50):
-        index_a = cut_point(parent_a)
-        a = len(parent_a)
-        index_b = cut_point(parent_b)
-        b = len(parent_b)
-        count = 0
-        i = index_a
-        j = index_b
+       
+        str1 = ''
+        str2 = ''
         
-        # Splicing parent_a
-        if parent_a[index_a] != '(':
-                
+        #Splicing parent a
+        while len(str1)<13:
+            index_a = cut_point(parent_a)
+            a = len(parent_a)
+            count = 0
+            i = index_a
+            # Splicing parent_a
+            if parent_a[index_a] != '(':
+                for i in range(index_a, a):
+                    if parent_a[i] == '(':
+                        #index_a=1
+                        break
+            
+            index_a = i 
+        
             for i in range(index_a, a):
                 if parent_a[i] == '(':
-                    #index_a = i
+                    count = count+1
+                elif parent_a[i] == ')': 
+                    count = count-1
+                if parent_a[i] == ')' and count == 0:  
                     break
-             
-        index_a = i 
+                i = i+1
+                
+            str1 = parent_a[index_a : i+1] 
         
-        for i in range(index_a, a):
-            if parent_a[i] == '(':
-                count = count+1
-            elif parent_a[i] == ')': 
-                count = count-1
-            if parent_a[i] == ')' and count == 0:  
-                break
-            i = i+1
-                    
-              
-        str1 = parent_a[index_a : i+1] 
-
-        # Splicing parent_b
-        if parent_b[index_b] != '(':
+        #Splicing parent b        
+        while len(str2)<13:
+            index_b = cut_point(parent_b)
+            b = len(parent_b)
+            count = 0
+            j = index_b
+            # Splicing parent_b
+            if parent_b[index_b] != '(':
+                for j in range(index_b, b):
+                    if parent_b[j] == '(':
+                        #index_b=1
+                        break
             
+            index_b = j 
+        
             for j in range(index_b, b):
                 if parent_b[j] == '(':
-                    #index_b = j
+                    count = count+1
+                elif parent_b[j] == ')': 
+                    count = count-1
+                if parent_b[j] == ')' and count == 0:  
                     break
+                j = j+1
                 
-        index_b = j
-        count = 0
-        
-        for j in range(index_b, b):
-            if parent_b[j] == '(':
-                count = count+1
-            elif parent_b[j] == ')': 
-                count = count-1
-            if parent_b[j] == ')' and count == 0:  
-                break
-            j = j+1
-            
-        str2 = parent_b[index_b : j+1]
-        
+            str2 = parent_b[index_b : j+1] 
+ 
+        # Crossover - replacing str from parent a with str from b 
         child_string = parent_a.replace(str1, str2, 1)
        
-        # Check child_string
+        # Check if child_string is a valid molecule
         if string_OK(child_string):
             return (child_string)
    
