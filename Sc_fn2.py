@@ -20,7 +20,7 @@ import xyz_gen as xg
 import os
 import time
 
-# Function to find and extract LUMO value from QChem.out file
+
 def extract_LUMO(file):#change filename here
         number = 0   
         with open(file,"r") as output_file:
@@ -42,7 +42,6 @@ def extract_LUMO(file):#change filename here
                 LUMO[i] = float(LUMO[i])
         return(LUMO)
 
-# Function to calculate score (LUMO value); Called while running string_GA.py 
 def calculate_scores(population, args, generation):
   scores = []
   #smiles to xyz
@@ -57,7 +56,9 @@ def calculate_scores(population, args, generation):
       calc = QChem(jobtype='opt',
                    label=name,
                    method='PBE',
-                   basis='3-21G')
+                   basis='3-21G',
+                   scf_convergence='8',
+                   scf_max_cycles='200')
       comp.set_calculator(calc)
       opt = LBFGS(comp)
       opt.run()
@@ -67,7 +68,7 @@ def calculate_scores(population, args, generation):
       score = extract_LUMO(file)
       scores.append(score)
 
-  #Printing scores in a separate file called Result.out:
+  #Printing scores:
   f = open("Result.out", "a")
   print(generation, file=f)
   print(scores, file=f)   
@@ -76,4 +77,3 @@ def calculate_scores(population, args, generation):
   print(scores)
 
   return scores
- 
