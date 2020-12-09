@@ -18,13 +18,12 @@ import Multipoint as co
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
-# List of possible mutations
 def get_symbols():
-    symbols = ['C(C#N)', 'C(C=O)', 'C(C(=O)C)', 'C(O)', 'C(C4=CC=CC=C4)', 'C(C(=O)O)'] 
-               
+    symbols = ['C(N(C)C)', 'C(N)', 'C(N(C))', 'C(O)', 'C(OC)', 'C(C)', 'C(F)', 
+               'C(Cl)', 'C(SC)', 'C(Br)', 'C(C=O)', 'C(C(F)(F)F)', 'C(C#N)', 
+               'C([N+](=O)[O-])', 'C(C3=CC=C4C=CC=CC4=C3)' ]
     return symbols
 
-# Mutation operator; Causes a mutation if random number less than specified mutation rate in string_GA.oy
 def mutate(child,mutation_rate):
     if random.random() > mutation_rate:
         return child
@@ -32,25 +31,47 @@ def mutate(child,mutation_rate):
     child = co.string2list(child)
    
     for i in range(50):
-        random_number = random.random()
+        
         mutated_gene = random.randint(0, len(child) - 1)
         random_symbol_number = random.randint(0, len(symbols)-1)
         new_child = list(child)
         random_number = random.random()
         
-        # Finds a new position for mutation if the chosen position is a bond
-        if (new_child[mutated_gene] == '='):
-            m=1 #nothing
-        
-        else:
-            new_child[mutated_gene] = symbols[random_symbol_number]
-            new_child = co.list2string(new_child)
-            if co.string_OK(new_child):
-                 return new_child
+        if new_child[mutated_gene] == 'C':
+            if new_child[mutated_gene+1] == 'C':
+                new_child[mutated_gene] = symbols[random_symbol_number]
+                new_child = co.list2string(new_child)
+                if co.string_OK(new_child):
+                    return new_child
+            elif new_child[mutated_gene+1] == '=' and new_child[mutated_gene-1] == 'C':     
+                new_child[mutated_gene] = symbols[random_symbol_number]
+                new_child = co.list2string(new_child)
+                if co.string_OK(new_child):
+                    return new_child
+            elif new_child[mutated_gene+1] == '(':
+                a = len(child)
+                count = 0
+                
+                for j in range(mutated_gene, a):
+                    if child[j] == '(':
+                        count = count+1
+                    elif child[j] == ')': 
+                        count = count-1
+                    if child[j] == ')' and count == 0:  
+                        break
+                #j = j+1
+                new_child = co.list2string(new_child)
+                str1 = new_child[mutated_gene : j+1]
+                #print(str1)
+                str2 =symbols[random_symbol_number]
+                #print(str2)
+                if len(str1)<13:
+                    new_child = new_child.replace(str1, str2, 1)
+                if co.string_OK(new_child):
+                    return new_child 
 
     return co.list2string(child)
-           
-# Test case    
+                    
 if __name__ == "__main__":
     co.average_size = 39.15
     co.size_stdev = 3.50
