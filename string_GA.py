@@ -21,8 +21,8 @@ import sys
 import Multipoint as co
 import string_mutate as mu
 import Sc_fn2 as sc
+import ring_num as nm
 
-# Read input file for intial population
 def read_file(file_name):
   smiles_list = []
   with open(file_name,'r') as file:
@@ -37,16 +37,12 @@ def make_initial_population(population_size,file_name):
   population = []
   for _ in range(population_size):
     smiles = random.choice(smiles_list)
-    mol = Chem.MolFromSmiles(smiles)
-    Chem.Kekulize(mol, clearAromaticFlags=True)
-    smiles = Chem.MolToSmiles(mol, isomericSmiles=False)
-    string = co.smiles2string(smiles)
+    string = smiles
     if string:
       population.append(string)
     
   return population
 
-# Scales down scores to a range of 0-1, where a higher number corresponds to a better probability of reproduction
 def calculate_normalized_fitness(scores):
   sum_scores = len(scores)-sum(np.absolute(scores))
   sum_scores = sum_scores[0]
@@ -54,7 +50,6 @@ def calculate_normalized_fitness(scores):
    
   return normalized_fitness
 
-# Creates a mating pool of the specified population size
 def make_mating_pool(population,fitness,mating_pool_size):
   mating_pool = []
   for i in range(mating_pool_size):
@@ -62,13 +57,14 @@ def make_mating_pool(population,fitness,mating_pool_size):
 
   return mating_pool
  
-# Performs crossover and mutation to produce a new molecule
+
 def reproduce(mating_pool,population_size,mutation_rate):
   new_population = []
   while len(new_population) < population_size:
     parent_A = random.choice(mating_pool)
     parent_B = random.choice(mating_pool)
     new_child = co.crossover(parent_A,parent_B)
+    new_child = nm.rnumber(new_child)
     if new_child != None:
 	    new_child = mu.mutate(new_child,mutation_rate)
 	    if new_child != None:
@@ -76,7 +72,6 @@ def reproduce(mating_pool,population_size,mutation_rate):
 
   return new_population
 
-# Compares the list of parents and new molecules and chooses the best from both put together
 def sanitize(population,scores,population_size):
     prune_population = True 
     if prune_population:
@@ -131,22 +126,19 @@ def GA(args):
   return (scores, population, generation+1, fitness, maxscore)
 
 
-# Test case
 if __name__ == "__main__":
     Compound = 'C1=CC=CC=C1C2=CC=C(C3=CC=CC=C3)C=C2'
     target = Chem.MolFromSmiles(Compound)
     population_size = 10 
     mating_pool_size = 10
-    generations = 15
-    mutation_rate = 0.9
+    generations = 10
+    mutation_rate = 0.5
     co.average_size = 39.15
     co.size_stdev = 3.50
-    #scoring_function = sc.energymin
     max_score = -5 
-    #prune_population = True
     scoring_args = [target]
     initial = 50
-    file_name = 'terphenyl2.smi'
+    file_name = 'terphenyl.smi'
 
     (scores, population, generation,fitness, maxscore) = GA([population_size, file_name, generations,
                                            mating_pool_size, mutation_rate, scoring_args, max_score])
