@@ -1,27 +1,17 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue May 19 09:14:16 2020
-
-@author: Pran Regu
-
-SCORING FUNCTION
-"""
-
-
+# Scoring function (Evaluation function):
 from rdkit import Chem
 
-from ase.build import molecule
 from ase.calculators.qchem import QChem
 from ase.optimize import LBFGS
+
+from ase.build import molecule
 from ase import Atoms
 from ase.io import read,write
 
 import xyz_gen as xg
-import os
-import time
 
-
-def extract_LUMO(file):#change filename here
+# Opens generated Qchem output file and extracts LUMO:
+def extract_LUMO(file): 
         number = 0   
         with open(file,"r") as output_file:
             for line in output_file:
@@ -42,7 +32,8 @@ def extract_LUMO(file):#change filename here
                 LUMO[i] = float(LUMO[i])
         return(LUMO)
 
-def calculate_scores(population, args, generation):
+# Function to calculate the scores of the molecules in the population:
+def calculate_scores(population, generation):
   scores = []
   #smiles to xyz
   for i in range(len(population)):
@@ -73,7 +64,5 @@ def calculate_scores(population, args, generation):
   print(generation, file=f)
   print(scores, file=f)   
   f.close()  
-  print(generation)
-  print(scores)
 
   return scores
