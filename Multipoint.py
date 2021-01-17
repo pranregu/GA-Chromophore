@@ -1,11 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 18 13:11:57 2019
+# Crossover function
 
-@author: Pran Regu
-
-CROSSOVER OPERATOR
-"""
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
@@ -15,6 +9,7 @@ import numpy as np
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
+# Checks if the molecule is legitimate:
 def string_OK(string):
   mol = string2mol(string)
   if not mol:
@@ -32,41 +27,23 @@ def string_OK(string):
   except:
     return False
 
-def cut_point(parent):
-  m = random.randint(0, len(parent) - 1)
-  return m
-
-def string2list(string):
-    return list(string)
-
-def mol2string(mol):
-    smiles = Chem.MolToSmiles(mol)
-
-    return list(smiles)
-
 def list2string(list):
     string = ''.join(list)
     return string
 
-def smiles2string(smiles):
-    string = smiles
-    return string
-
-def string2smiles(string):
-    smiles = string
-    return smiles
-
-
 def string2mol(string):
-    smiles = string
-
     try:
-        mol = Chem.MolFromSmiles(smiles)
+        mol = Chem.MolFromSmiles(string)
         return mol
     except:
         return None
 
-# multipoint crossover
+# Selects a random splicing point:
+def cut_point(parent):
+    m = random.randint(0, len(parent) - 1)
+    return m
+
+# Multipoint crossover operator:
 def crossover(parent_a,parent_b):
     
     for _ in range(50):
