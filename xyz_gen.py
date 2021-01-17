@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 16 14:03:47 2020
-
-@author: Pran Regu
-"""
-
 #imports
 from rdkit import Chem
 from rdkit.Chem import AllChem
