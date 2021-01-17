@@ -1,34 +1,26 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov  2 18:42:06 2019
-
-@author: Pran Regu
-
-MUTATION OPERATOR
-"""
-
-from rdkit import Chem
-from rdkit.Chem import AllChem
+# Mutation function
 
 import random
-import numpy as np
 
 import Multipoint as co
 
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
 
+# List of possible mutations:
 def get_symbols():
     symbols = ['C(N(C)C)', 'C(N)', 'C(N(C))', 'C(O)', 'C(OC)', 'C(C)', 'C(F)', 
                'C(Cl)', 'C(SC)', 'C(Br)', 'C(C=O)', 'C(C(F)(F)F)', 'C(C#N)', 
-               'C([N+](=O)[O-])', 'C(C3=CC=C4C=CC=CC4=C3)' ]
+               'C([N+](=O)[O-])']
+
     return symbols
 
+# Mutation operator:
 def mutate(child,mutation_rate):
     if random.random() > mutation_rate:
         return child
     symbols = get_symbols()
-    child = co.string2list(child)
+    child = list(child)
    
     for i in range(50):
         
@@ -38,16 +30,19 @@ def mutate(child,mutation_rate):
         random_number = random.random()
         
         if new_child[mutated_gene] == 'C':
+            # -C-C- mutation
             if new_child[mutated_gene+1] == 'C':
                 new_child[mutated_gene] = symbols[random_symbol_number]
                 new_child = co.list2string(new_child)
                 if co.string_OK(new_child):
                     return new_child
+            # -C-C= mutation 
             elif new_child[mutated_gene+1] == '=' and new_child[mutated_gene-1] == 'C':     
                 new_child[mutated_gene] = symbols[random_symbol_number]
                 new_child = co.list2string(new_child)
                 if co.string_OK(new_child):
                     return new_child
+            # -C( mutation : replaces (1) with (2)
             elif new_child[mutated_gene+1] == '(':
                 a = len(child)
                 count = 0
@@ -77,6 +72,7 @@ if __name__ == "__main__":
     co.size_stdev = 3.50
     mutation_rate = 1.0
     co.string_type = 'smiles'
+    
     string = 'C1=CC=CC=C1C2=CC=C(C3=CC=CC=C3)C=C2'
     child = mutate(string,mutation_rate)
     print(child)
